@@ -10,6 +10,16 @@
         <h1><?= $title ?? "" ?></h1>
         <p>Bienvenue dans <?= htmlspecialchars($data['nomLibrairie'] ?? 'la mini-librairie') ?></p>
 
+        <!-- Liens de filtrage -->
+        <nav>
+            <ul>
+                <li><a href="/catalogue">Tous les livres</a></li>
+                <li><a href="/catalogue?genre=Fantasy">Fantasy</a></li>
+                <li><a href="/catalogue?genre=Aventure">Aventure</a></li>
+                <li><a href="/catalogue?genre=Conte">Conte</a></li>
+            </ul>
+        </nav>
+
         <?php if (!empty($data['livres'])): ?>
             <table>
                 <thead>
