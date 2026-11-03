@@ -35,7 +35,36 @@ class HomeController
         include __DIR__ . "/../../template/template_accueil.php";
     }
 
-    //Méthode qui va retourner les templates
+
+    // Méthode pour retourner la page Catalogue
+   public function catalogue(): mixed 
+    {
+        // Définition du tableau $data avec les données à transmettre
+        $data = [
+            'nomLibrairie' => 'La Petite Librairie',
+            'livres' => [
+                [
+                    'titre' => 'Le Petit Prince',
+                    'auteur' => 'Antoine de Saint-Exupéry',
+                    'genre' => 'Conte'
+                ],
+                [
+                    'titre' => 'Le Hobbit',
+                    'auteur' => 'J. R. R. Tolkien',
+                    'genre' => 'Fantasy'
+                ],
+                [
+                    'titre' => 'L’Île au trésor',
+                    'auteur' => 'Robert Louis Stevenson',
+                    'genre' => 'Aventure'
+                ]
+            ]
+        ];
+
+        return $this->render("catalogue", "Catalogue", $data);
+    }
+
+    //Méthode qui va retourner les templates (Celle-ci manquait !)
     private function render(string $template, ?string $title, array $data = []): mixed
     {
         return include __DIR__ . "/../../template/template_" . $template . ".php";
