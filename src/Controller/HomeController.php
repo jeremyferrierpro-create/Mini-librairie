@@ -38,10 +38,10 @@ class HomeController
     // Méthode pour retourner la page Catalogue
     public function catalogue(): mixed 
     {
-        // 1. On récupère le filtre 'genre' s'il existe dans l'URL (ex: ?genre=Fantasy), sinon chaîne vide
+        // On récupère le filtre 'genre' s'il existe dans l'URL (ex: ?genre=Fantasy), sinon chaîne vide
         $genreFiltre = $_GET['genre'] ?? '';
 
-        // 2. La liste complète des livres
+        // La liste complète des livres
         $tousLesLivres = [
             [
                 'titre' => 'Le Petit Prince',
@@ -60,7 +60,7 @@ class HomeController
             ]
         ];
 
-        // 3. On filtre les livres
+        // On filtre les livres
         $livresFiltres = [];
 
         if (empty($genreFiltre)) {
@@ -75,7 +75,7 @@ class HomeController
             }
         }
 
-        // 4. On transmet les données au template
+        // On transmet les données au template
         $data = [
             'nomLibrairie' => 'La petite librairie',
             'livres' => $livresFiltres
@@ -84,12 +84,32 @@ class HomeController
         return $this->render("catalogue", "Catalogue", $data);
     }
 
-    // Méthode pour afficher la page de commande
+    // Méthode pour afficher et traiter la page de commande
     public function commande(): mixed
     {
-        return $this->render("commande", "Devis de commande");
+        // Valeurs initiales par défaut
+        $data = [
+            'titre' => '',
+            'quantite' => '',
+            'soumis' => false // Permet de savoir si le formulaire a été envoyé
+        ];
+
+        // Si le formulaire est soumis
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $titre = isset($_POST['titre']) && is_string($_POST['titre']) ? $_POST['titre'] : '';
+            $quantite = isset($_POST['quantite']) && is_string($_POST['quantite']) ? $_POST['quantite'] : '';
+
+            // On met à jour le tableau de données
+            $data = [
+                'titre' => $titre,
+                'quantite' => $quantite,
+                'soumis' => true
+            ];
+        }
+
+        return $this->render("commande", "Devis de commande", $data);
     }
-    
+
     //Méthode qui va retourner les templates
     private function render(string $template, ?string $title, array $data = []): mixed
     {
