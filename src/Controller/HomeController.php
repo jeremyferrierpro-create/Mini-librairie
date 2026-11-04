@@ -84,6 +84,12 @@ class HomeController
         return $this->render("catalogue", "Catalogue", $data);
     }
 
+    // Méthode pour afficher la page de commande
+    public function commande(): mixed
+    {
+        return $this->render("commande", "Devis de commande");
+    }
+    
     //Méthode qui va retourner les templates
     private function render(string $template, ?string $title, array $data = []): mixed
     {
