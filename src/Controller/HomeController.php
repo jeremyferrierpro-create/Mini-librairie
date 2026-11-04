@@ -84,27 +84,59 @@ class HomeController
         return $this->render("catalogue", "Catalogue", $data);
     }
 
-    // Méthode pour afficher et traiter la page de commande
+// Méthode pour afficher et traiter la page de commande
     public function commande(): mixed
     {
-        // Valeurs initiales par défaut
+        // Valeurs initiales par défaut (quand on arrive en GET)
         $data = [
             'titre' => '',
             'quantite' => '',
-            'soumis' => false // Permet de savoir si le formulaire a été envoyé
+            'erreurs' => [],
+            'montantFormate' => '',
+            'soumis' => false
         ];
 
-        // Si le formulaire est soumis
+        // Si le formulaire est soumis en POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $titre = isset($_POST['titre']) && is_string($_POST['titre']) ? $_POST['titre'] : '';
-            $quantite = isset($_POST['quantite']) && is_string($_POST['quantite']) ? $_POST['quantite'] : '';
+            $titreBrut = $_POST['titre'] ?? '';
+            $quantiteBrute = $_POST['quantite'] ?? '';
 
-            // On met à jour le tableau de données
-            $data = [
-                'titre' => $titre,
-                'quantite' => $quantite,
-                'soumis' => true
-            ];
+            $erreurs = [];
+
+            // Nettoyage et validation du titre
+            $titreNettoye = is_string($titreBrut) ? trim($titreBrut) : '';
+            if ($titreNettoye === '') {
+                $erreurs['titre'] = "Le titre est obligatoire et ne peut pas être vide ou composé uniquement d'espaces.";
+            }
+
+            // Validation de la quantité (entier de 1 à 20)
+            // filter_var retourne false si ce n'est pas un entier valide ou hors limites
+            $quantiteValide = filter_var($quantiteBrute, FILTER_VALIDATE_INT, [
+                "options" => [
+                    "min_range" => 1,
+                    "max_range" => 20
+                ]
+            ]);
+
+            if ($quantiteValide === false) {
+                $erreurs['quantite'] = "La quantité doit être un nombre entier compris entre 1 et 20.";
+            }
+
+            // On conserve la saisie de l'utilisateur pour réafficher les champs
+            $data['titre'] = $titreBrut;
+            $data['quantite'] = $quantiteBrute;
+            $data['soumis'] = true;
+            $data['erreurs'] = $erreurs;
+
+            // S'il n'y a aucune erreur, on calcule le montant
+            if (empty($erreurs)) {
+                $prixUnitaireCentimes = 1250; // 12,50 €
+                $montantTotalCentimes = $quantiteValide * $prixUnitaireCentimes;
+                $montantEuros = $montantTotalCentimes / 100;
+
+                // Formatage propre du montant (ex: 37,50 €)
+                $data['montantFormate'] = number_format($montantEuros, 2, ',', ' ') . ' €';
+            }
         }
 
         return $this->render("commande", "Devis de commande", $data);
