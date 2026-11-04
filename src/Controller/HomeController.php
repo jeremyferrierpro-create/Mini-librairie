@@ -77,7 +77,7 @@ class HomeController
 
         // 4. On transmet les données au template
         $data = [
-            'nomLibrairie' => 'La Petite Librairie',
+            'nomLibrairie' => 'La petite librairie',
             'livres' => $livresFiltres
         ];
 

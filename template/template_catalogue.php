@@ -17,6 +17,7 @@
                 <li><a href="/catalogue?genre=Fantasy">Fantasy</a></li>
                 <li><a href="/catalogue?genre=Aventure">Aventure</a></li>
                 <li><a href="/catalogue?genre=Conte">Conte</a></li>
+                <li><a href="/catalogue?genre=Polar">Polar</a></li>                
             </ul>
         </nav>
 
